@@ -19,6 +19,8 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
+    // I set this in componentDidMount here because I wanted to mimic a real scenario as close
+    // as possible, where our data may be comning from a server/database
     this.setState({
       fields: this.props.fakeData,
     });
@@ -32,10 +34,8 @@ class Main extends React.Component {
     e.preventDefault();
     const now = new Date();
     if (new Date(this.state.date_of_birth) >= new Date(now.getFullYear() - 13, now.getMonth(), now.getDate()) && !this.state.parental_consent) {
-      alert('Parental Consent Needed For Ages Under 13')
-    }
-
-    if (this.state.first_name && this.state.last_name && this.state.email && this.state.phone_number && this.state.job_title && this.state.date_of_birth) {
+      alert('Parental Consent Needed For Ages Under 13');
+    } else if (this.state.first_name && this.state.last_name && this.state.email && this.state.phone_number && this.state.job_title && this.state.date_of_birth) {
       console.log(JSON.stringify({
         "first_name": this.state.first_name,
         "last_name": this.state.last_name,
@@ -77,18 +77,20 @@ class Main extends React.Component {
             const Tagtype = each.tag;
             return (
               <div key={index} className={styles.eachForm}>
+                {/* We only show the parental consent checkbox and label if the conditional shows true and the label is 'Parental Connsent' */}
                 {each.human_label === 'Parental Consent' && each.conditional.show_if(this.state.date_of_birth)
                   ? (
                     <div>
-                      <label>{each.human_label}</label>
+                      <label htmlFor={each.name}>{each.human_label}</label>
                       <Tagtype type={each.type} name={each.name} className={styles.inputBox} onChange={(e) => { this.onChange(e, each.name); }} />
                     </div>
                   )
                   : null}
+                {/* We want to show all other labels and inputs that are not parental consent at all times */}
                 {each.human_label !== 'Parental Consent'
                   ? (
                     <div>
-                      <label>{each.human_label}</label>
+                      <label htmlFor={each.name}>{each.human_label}</label>
                       <Tagtype type={each.type} name={each.name} className={styles.inputBox} onChange={(e) => { this.onChange(e, each.name); }} />
                     </div>
                   )

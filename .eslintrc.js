@@ -27,5 +27,8 @@ module.exports = {
     "quote-props": "off",
     "quotes": "off",
     "react/no-array-index-key": "off",
+    "no-alert": "off",
+    "no-console": "off",
+    "jsx-a11y/label-has-for": "off"
   },
 };
