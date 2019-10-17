@@ -25,6 +25,7 @@ module.exports = {
     "react/destructuring-assignment": "off",
     "max-len" : "off",
     "quote-props": "off",
-    "quotes": "off"
+    "quotes": "off",
+    "react/no-array-index-key": "off",
   },
 };
