@@ -13,7 +13,7 @@ class Main extends React.Component {
       phone_number: '',
       job_title: '',
       date_of_birth: '',
-      parental_consent: '',
+      parental_consent: false,
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -27,15 +27,23 @@ class Main extends React.Component {
   }
 
   onChange(e, key) {
-    this.setState({ [key]: e.target.value });
+    if (this.state[key] === true || this.state[key] === false) {
+      this.setState(state => ({
+        [key]: !state[key],
+      }));
+    } else {
+      this.setState({ [key]: e.target.value });
+    }
   }
 
   onSubmit(e) {
     e.preventDefault();
     const now = new Date();
-    if (new Date(this.state.date_of_birth) >= new Date(now.getFullYear() - 13, now.getMonth(), now.getDate()) && !this.state.parental_consent) {
-      alert('Parental Consent Needed For Ages Under 13');
-    } else if (this.state.first_name && this.state.last_name && this.state.email && this.state.phone_number && this.state.job_title && this.state.date_of_birth) {
+    const compareDate = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate()); // date to compare if user is more than 13 yrs old
+    const userDate = new Date(this.state.date_of_birth); // current date
+
+    // Log the JSON response object if everything is filled out
+    if (this.state.first_name && this.state.last_name && this.state.email && this.state.phone_number && this.state.job_title && this.state.date_of_birth && ((userDate >= compareDate && this.state.parental_consent) || userDate < compareDate)) {
       console.log(JSON.stringify({
         "first_name": this.state.first_name,
         "last_name": this.state.last_name,
@@ -46,6 +54,7 @@ class Main extends React.Component {
         "parental_consent": this.state.parental_consent,
       }));
     } else {
+      // Alert user if any fields are missing
       let message = '';
       if (!this.state.first_name) {
         message += `Please enter first name \n`;
@@ -64,6 +73,9 @@ class Main extends React.Component {
       }
       if (!this.state.date_of_birth) {
         message += `Please enter date of birth \n`;
+      }
+      if (userDate >= compareDate && !this.state.parental_consent) {
+        message += `Parental Consent Needed For Ages Under 13 \n`;
       }
       alert(message);
     }
